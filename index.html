@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Table Swapi</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    #container {padding: 2em;}
+    h3   {color: blue;}
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h3 data-localize="news_updates">Swapi Data</h3><br />
+    <input type="text" id="myInput" onkeyup="filterData()" placeholder="Search keyword.." title="Type in a name"><br /><br />
+    <table class="data table table-condensed table-striped" id="myTable">
+      <tr class="header">
+        <td>No</td>
+        <td>Name</td>
+        <td>Rotation period</td>
+        <td>Diameter</td>
+        <td>Population</td>
+        <td>URL</td>
+      </tr>
+    </table>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script>
+    function filterData() {
+      const filter = document.querySelector('#myInput').value.toUpperCase();
+      const trs = document.querySelectorAll('#myTable tr:not(.header)');
+      trs.forEach(tr => {
+        tr.style.display = [...tr.children].find(td => td.innerHTML.toUpperCase().includes(filter)) ? '' : 'none'
+      });
+    }
+    $(document).ready(function() {
+      const end_point = 'https://swapi.co/api/planets/';
+      function populate_data(end_point) {
+        $.getJSON(end_point, function(data) {
+          html = '';
+          data.results.forEach((item, i) => {
+            html=`
+            <tr>
+              <td>${i+1}</td>
+              <td>${item.name}</td>
+              <td>${item.rotation_period}</td>
+              <td>${item.diameter}</td>
+              <td>${item.population}</td>
+              <td>${item.url}</td>
+            </tr>`;
+            $('#container .data').append(html);
+          });
+        });
+      }
+      
+      populate_data(end_point);
+    });
+    </script>
+  </body>
+</html>
